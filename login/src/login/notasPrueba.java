@@ -616,6 +616,7 @@ public class notasPrueba extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
     
         if (confirm == JOptionPane.YES_OPTION) {
+            jPanel4MouseClicked(null);
             this.dispose();
             new Login().setVisible(true);
         }

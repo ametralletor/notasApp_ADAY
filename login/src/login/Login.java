@@ -24,7 +24,7 @@ import java.io.IOException;
 public class Login extends javax.swing.JFrame {
 
     
-    public static notasAday App;
+    public static notasPrueba App;
     /**
      * Creates new form Login
      */
