@@ -63,7 +63,7 @@ public class Registro extends javax.swing.JFrame {
         bg.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, -1, -1));
 
         jTextField1.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(204, 204, 204));
+        jTextField1.setForeground(new java.awt.Color(115, 115, 115));
         jTextField1.setBorder(null);
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,7 +87,7 @@ public class Registro extends javax.swing.JFrame {
         bg.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, -1, -1));
 
         jTextField2.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        jTextField2.setForeground(new java.awt.Color(204, 204, 204));
+        jTextField2.setForeground(new java.awt.Color(115, 115, 115));
         jTextField2.setBorder(null);
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,7 +113,7 @@ public class Registro extends javax.swing.JFrame {
         jSeparator3.setForeground(new java.awt.Color(0, 0, 0));
         bg.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 270, -1));
 
-        jPasswordField1.setForeground(new java.awt.Color(204, 204, 204));
+        jPasswordField1.setForeground(new java.awt.Color(115, 115, 115));
         jPasswordField1.setBorder(null);
         bg.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 260, 270, 30));
         jPasswordField1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -251,6 +251,9 @@ public class Registro extends javax.swing.JFrame {
             if (usuarioExiste(name, email, hashPass)) {
                 jlGuardarError.setForeground(new java.awt.Color(255, 0, 0));
                 jlGuardarError.setText("El usuario ya existe. Cambia los datos.");
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jPasswordField1.setText("");
             }else{
             guardarData(name, email, hashPass);
             crearDirectorioUsuario(email);

@@ -474,6 +474,74 @@ public class notasPrueba extends javax.swing.JFrame {
 
     }
 
+    private void guardarAuto() {    
+        cambiarSeleccion = false;                                 
+        try{
+            if (jTextField1.getText().equals("")){
+                //JOptionPane.showMessageDialog(null, "Debe ingresar un titulo", "Notas App", JOptionPane.PLAIN_MESSAGE);
+                //etiqueta.setText("Debe ingresar un titulo");
+                return;
+                
+            }
+
+            FileWriter writer = new FileWriter("data/usuarios/"+usuario+"/"+jTextField1.getText()+".txt", false);
+            writer.write(jTextArea1.getText());
+            writer.close();
+
+            
+                if (!editado) {
+                    if (!modeloLista.contains(jTextField1.getText()+".txt")){
+                    modeloLista.addElement(jTextField1.getText()+".txt");
+               
+                    jTextField1.setText("");
+                    jTextArea1.setText("");
+                    //etiqueta.setText("Guardado");
+                    editado=false;
+                    jLabel8.setText("EDITAR");
+                    jLabel7.setText("GUARDAR");
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Ya existe una nota con ese nombre", "Notas App", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }else {
+                    
+                    File archivo = new File("data/usuarios/"+usuario+"/"+modeloLista.getElementAt(indiceLista));
+                    
+                    if (!modeloLista.contains(jTextField1.getText()+".txt")){
+                        modeloLista.removeElementAt(indiceLista);
+                        archivo.delete();
+
+                        modeloLista.add(indiceLista, jTextField1.getText()+".txt");
+                        jTextField1.setText("");
+                        jTextArea1.setText("");
+                    } else if (modeloLista.getElementAt(indiceLista).equals(jTextField1.getText()+".txt")){
+                        jTextField1.setText("");
+                        jTextArea1.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Ya existe una nota con ese nombre", "Notas App", JOptionPane.PLAIN_MESSAGE);
+                        
+                    }
+                    
+                    
+                    
+                    
+    
+                    editado = false;
+                    indiceLista = -1;
+                    jLabel8.setText("EDITAR");
+                    jLabel7.setText("GUARDAR");
+                    //etiqueta.setText("Editado");
+                }
+            
+            jList1.repaint();
+            
+        } catch(IOException ex){
+            ventanaError("Error al guardar");
+        } finally {
+            cambiarSeleccion = true;
+        }
+
+    }
+
     private void jPanel6MouseClicked(MouseEvent evt) {                                     
         try{
             if (jList1.getSelectedValue()==null){
@@ -616,7 +684,7 @@ public class notasPrueba extends javax.swing.JFrame {
         JOptionPane.YES_NO_OPTION);
     
         if (confirm == JOptionPane.YES_OPTION) {
-            jPanel4MouseClicked(null);
+            guardarAuto(); 
             this.dispose();
             new Login().setVisible(true);
         }

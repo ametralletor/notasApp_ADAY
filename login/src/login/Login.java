@@ -210,6 +210,8 @@ public class Login extends javax.swing.JFrame {
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+            CUsuario.setText("");
+            CPass.setText("");
             //CAMBIAR ESTO POR UN JLABEL QUE DIGA QUE EL USUARIO O CONTRASEÑA SON INCORRECTOS
             
         }
