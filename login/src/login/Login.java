@@ -198,25 +198,29 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jlRegistrarMouseEntered
 
                    
-   
+   //se almacenan los campos en strings, se llama a la funcion authUsuario para comprobar si es correcto
     private void jlEntrarMouseClicked(java.awt.event.MouseEvent evt) {                                      
         String email = CUsuario.getText();
         String pass = new String (CPass.getPassword());
         String hashPass = hashPassword(pass);
 
+        //si es correcto, se abre la aplicacion
         if (authUsuario(email, hashPass)) {
             notasPrueba App = new notasPrueba(email);
             App.setVisible(true);
             this.dispose();
         } else {
+            //si no, se muestra un mensaje de error y se limpian los campos
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
             CUsuario.setText("");
             CPass.setText("");
-            //CAMBIAR ESTO POR UN JLABEL QUE DIGA QUE EL USUARIO O CONTRASEÑA SON INCORRECTOS
+         
             
         }
     }
 
+
+    //funcion para comprobar si el usuario y la contraseña existen y son correctos
     private boolean authUsuario(String email, String hashPass) {
     try {
         List<String> lineas = Files.readAllLines(Paths.get("data/users.txt"));
@@ -239,7 +243,7 @@ public class Login extends javax.swing.JFrame {
     return false;
     
     }
-
+        
         private String hashPassword(String password) {
     try {
         MessageDigest md = MessageDigest.getInstance("SHA-256");

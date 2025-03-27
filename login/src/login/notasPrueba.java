@@ -16,6 +16,8 @@ public class notasPrueba extends javax.swing.JFrame {
     /**
      * Creates new form NotasApp
      */
+    //se almacena el usuario que inicio sesion para usarlo luego, se crea el modelo de la lista, se inician los componentes
+
     private String usuario;
     private DefaultListModel<String> modeloLista = new DefaultListModel<>();
     public notasPrueba(String usuario) {
@@ -402,25 +404,31 @@ public class notasPrueba extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
+    //se crean las variables cambiarSeleccion que se usa para evitar que se seleccione un archivo mientras se esta editando otro y asi no generar conflictos
+    //editado se usa para saber si se esta editando un archivo o no
+    //indiceLista se usa para saber en que indice de la lista esta seleccionado el archivo que se esta editando
     private boolean cambiarSeleccion = true;
     public boolean editado = false;
     public int indiceLista;
 
+
+    //funcion para guardar
     private void jPanel4MouseClicked(MouseEvent evt) {    
         cambiarSeleccion = false;                                 
         try{
+            //si no hay titulo, muestra un mensaje de error
             if (jTextField1.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Debe ingresar un titulo", "Notas App", JOptionPane.PLAIN_MESSAGE);
-                //etiqueta.setText("Debe ingresar un titulo");
+                
                 return;
                 
             }
-
+            //se crea el archivo y se escribe el contenido 
             FileWriter writer = new FileWriter("data/usuarios/"+usuario+"/"+jTextField1.getText()+".txt", false);
             writer.write(jTextArea1.getText());
             writer.close();
 
-            
+            //si no esta editado y no hay un archivo con el mismo nombre en la lista, se añade a la lista
                 if (!editado) {
                     if (!modeloLista.contains(jTextField1.getText()+".txt")){
                     modeloLista.addElement(jTextField1.getText()+".txt");
@@ -432,12 +440,16 @@ public class notasPrueba extends javax.swing.JFrame {
                     jLabel8.setText("EDITAR");
                     jLabel7.setText("GUARDAR");
                     }else{
+                        //si no, muestra un mensaje que dice que ya existe una nota con el mismo nombre
                         JOptionPane.showMessageDialog(null, "Ya existe una nota con ese nombre", "Notas App", JOptionPane.PLAIN_MESSAGE);
                     }
                 }else {
-                    
+                    //se crea el archivo
                     File archivo = new File("data/usuarios/"+usuario+"/"+modeloLista.getElementAt(indiceLista));
-                    
+                    //si no hay un archivo con el mismo nombre en la lista, se elimina el archivo
+                    //seleccionado en el indice y se elimina el archivo.
+                    //luego se añade el archivo con el nuevo nombre y se añade a la lista en la misma posicion
+
                     if (!modeloLista.contains(jTextField1.getText()+".txt")){
                         modeloLista.removeElementAt(indiceLista);
                         archivo.delete();
@@ -445,6 +457,8 @@ public class notasPrueba extends javax.swing.JFrame {
                         modeloLista.add(indiceLista, jTextField1.getText()+".txt");
                         jTextField1.setText("");
                         jTextArea1.setText("");
+
+                        //si el archivo seleccionado tiene el mismo titulo que el nuevo, se limpian los campos y se guardan los cambios
                     } else if (modeloLista.getElementAt(indiceLista).equals(jTextField1.getText()+".txt")){
                         jTextField1.setText("");
                         jTextArea1.setText("");
@@ -456,14 +470,14 @@ public class notasPrueba extends javax.swing.JFrame {
                     
                     
                     
-    
+                    //se reinician las variables y cambian las etiquetas
                     editado = false;
                     indiceLista = -1;
                     jLabel8.setText("EDITAR");
                     jLabel7.setText("GUARDAR");
                     //etiqueta.setText("Editado");
                 }
-            
+            //se recarga la lista
             jList1.repaint();
             
         } catch(IOException ex){
@@ -474,6 +488,7 @@ public class notasPrueba extends javax.swing.JFrame {
 
     }
 
+    //mismo metodo pero con alguna modificacion para guardar automaticamente al cerrar sesion
     private void guardarAuto() {    
         cambiarSeleccion = false;                                 
         try{
@@ -542,14 +557,19 @@ public class notasPrueba extends javax.swing.JFrame {
 
     }
 
+
+    //metodo para eliminar un archivo
     private void jPanel6MouseClicked(MouseEvent evt) {                                     
         try{
+            //si intentas eliminar un archivo sin seleccionar uno, muestra un mensaje de error
             if (jList1.getSelectedValue()==null){
                 
                 JOptionPane.showMessageDialog(null, "Seleccione un archivo de la lista", "Notas App", JOptionPane.PLAIN_MESSAGE);
                 return;
                 
             }
+
+            //se elimina el archivo de la carpeta y de la lista. se limpian los campos y actualiza la lista
             File archivo = new File("data/usuarios/"+usuario+"/"+jList1.getSelectedValue());
             archivo.delete();
             modeloLista.removeElement(jList1.getSelectedValue());
@@ -561,12 +581,16 @@ public class notasPrueba extends javax.swing.JFrame {
         }
     }
 
+
+    //metodo para eliminar todas las notas
     private void jPanel7MouseClicked(MouseEvent evt) {
+
+    //salta un mensaje de confirmacion
     int confirm = JOptionPane.showConfirmDialog(this, 
         "¿Estás seguro de que quieres eliminar TODAS las notas?", 
         "Confirmar eliminación", 
         JOptionPane.YES_NO_OPTION);
-    
+    //si el mensaje es si, se eliminan todas las notas
     if (confirm == JOptionPane.YES_OPTION) {
         File carpeta = new File("data/usuarios/"+usuario);
         File[] archivos = carpeta.listFiles();
@@ -577,24 +601,29 @@ public class notasPrueba extends javax.swing.JFrame {
             }
         }
 
-        
+        //se limpia la lista y los campos
         modeloLista.clear();
         jTextArea1.setText("");
         jTextField1.setText("");
-
-        JOptionPane.showMessageDialog(this, "Todas las notas fueron eliminadas.");
+        
     }
 }
 
+    //metodo para editar un archivo
     private void jPanel5MouseClicked(MouseEvent evt){
         cambiarSeleccion = false;
         String archivoSeleccionado = jList1.getSelectedValue();
         try{
+            //si no hay archivo seleccionado, salta un mensaje
             if (archivoSeleccionado==null){
                 JOptionPane.showMessageDialog(null, "Seleccione un archivo de la lista", "Notas App", JOptionPane.PLAIN_MESSAGE);
                 return;
                 
             }
+            //se lee el archivo y se añade el contenido y titulo
+            //editado pasa a estado true
+            //el indice de la lista es guardado
+            //las etiquetas cambian a cancelar edicion y guardar edicion
             File archivo = new File("data/usuarios/"+usuario+"/"+archivoSeleccionado);
             BufferedReader reader = new BufferedReader(new FileReader(archivo));
             jTextField1.setText(archivoSeleccionado.replace(".txt", ""));
@@ -613,7 +642,10 @@ public class notasPrueba extends javax.swing.JFrame {
         }
     }
 
+
+    //metodo para cancelar la edicion
     private void jPanel5MouseClicked2(MouseEvent evt){
+        //si editado es true, pasa a false y cambian las etiquetas y se limpian los campos
         if (editado) {
             editado = false;
 
@@ -625,20 +657,24 @@ public class notasPrueba extends javax.swing.JFrame {
        
     }
 
-
+    //metodo para buscar una palabra en las notas
     public void jPanel2MouseClicked(MouseEvent evt) {
         try{
+            //si no hay palabra, salta mensaje
           if (jTextField2.getText().equals("")){
               JOptionPane.showMessageDialog(null, "Debe ingresar una palabra para buscar sus notas.", "Notas App", JOptionPane.PLAIN_MESSAGE);
               return;
           }
+          //se almacenan todos los elementos de la lista en un array
           ArrayList<String> listaFiltro = new ArrayList<>();
           for (int i = 0; i < modeloLista.getSize(); i++) {
             String nombreArchivo = modeloLista.getElementAt(i);
             listaFiltro.add(nombreArchivo);
           }
-
+          //se limpia la lista
           modeloLista.clear();
+
+          //se buscan y leen los archivos con un bucle. si se encuentra alguno, lo añade a la lista y para el segundo bucle
           for (int i = 0; i < listaFiltro.size(); i++) {
               String nombreArchivo=listaFiltro.get(i);
               File archivo = new File("data/usuarios/"+usuario+"/"+nombreArchivo);
@@ -659,13 +695,14 @@ public class notasPrueba extends javax.swing.JFrame {
         }
   };
 
-
+    //metodo para limpiar lista de filtro. se limpia la palabra del campo de texto, se limpia la lista, y se llama a la funcion cargarNotas.
     private void jPanel3MouseClicked(MouseEvent evt) {
         jTextField2.setText("");
         modeloLista.clear();
         cargarNotas();
     }
 
+    //metodo para cancelar edicion
     private void cancelarEdicion() {
         if (editado) {
             editado = false;
@@ -676,13 +713,14 @@ public class notasPrueba extends javax.swing.JFrame {
         }
     }
 
-
+    //metodo para cerrar sesion
     private void cerrarSesion(){
+        //muestra un mensaje de confirmacion
         int confirm = JOptionPane.showConfirmDialog(this, 
         "¿Estás seguro de que quieres cerrar sesión? (Se guardaran los cambios automáticamente)", 
         "Confirmar cierre de sesión", 
         JOptionPane.YES_NO_OPTION);
-    
+        //si es si, se guardan los cambios y se cierra la ventana. se abre un nuevo login
         if (confirm == JOptionPane.YES_OPTION) {
             guardarAuto(); 
             this.dispose();
@@ -691,7 +729,7 @@ public class notasPrueba extends javax.swing.JFrame {
     }
 
 
-
+    //metodo para cargar notas. lee los archivos de la carpeta del usuario y los añade a la lista
     private void cargarNotas(){
         try{
             File carpeta = new File("data/usuarios/"+usuario);
@@ -705,6 +743,7 @@ public class notasPrueba extends javax.swing.JFrame {
     }
 
 
+    //metodo para mostrar mensaje de error en los catch
     public static void ventanaError(String mensaje){
         JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
     }

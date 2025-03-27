@@ -209,13 +209,14 @@ public class Registro extends javax.swing.JFrame {
      * @param args the command line arguments
      */
 
-    
+    //validación del email
     public static boolean validarEmail (String email) {
 		Pattern pattern = Pattern.compile("^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$");
 		Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}
     
+    //validación de los campos
     private  void validarCampos(){
         boolean valido = true;
         if(jTextField1.getText().isEmpty()){
@@ -243,6 +244,9 @@ public class Registro extends javax.swing.JFrame {
             jlPassError.setText("");
         }
 
+        //si es valido, se guardan los datos en strings. 
+        //si el usuario existe, da error y se limpian los cambios
+        //si nmo, se guardan los datos con un metodo y se crea el directorio del usuario
         if (valido){
             String name = jTextField1.getText();
             String email = jTextField2.getText();
@@ -266,7 +270,7 @@ public class Registro extends javax.swing.JFrame {
     
     }
 }
-
+    //metodo para buscar si el usuario existe
     private boolean usuarioExiste(String name, String email, String hashPass) {
     File file = new File("data/users.txt");
     if (!file.exists()) {
@@ -294,7 +298,7 @@ public class Registro extends javax.swing.JFrame {
     
     }
 
-
+    //metodo para crear directorios 
     private void crearDirectorio() {
     File directory = new File("data");
     File directory2 = new File("data/usuarios");
@@ -306,6 +310,7 @@ public class Registro extends javax.swing.JFrame {
     }
     }
 
+    //metodo para crear directorio de usuario  
     private void crearDirectorioUsuario(String email){
         File directory = new File("data/usuarios/" + email);
         if (!directory.exists()) {
@@ -313,7 +318,7 @@ public class Registro extends javax.swing.JFrame {
         }
     }
 
-    //hash para guardar contraseñas (lo hizo chatgpt)
+    //hash para encriptar contraseñas 
     private String hashPassword(String password) {
     try {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -329,7 +334,7 @@ public class Registro extends javax.swing.JFrame {
     }
 }
 
-
+    //metodo para guardar los datos en un archivo
     private void guardarData(String name, String email, String hashPass) {
     crearDirectorio();
     try (FileWriter writer = new FileWriter("data/users.txt", true)) {
